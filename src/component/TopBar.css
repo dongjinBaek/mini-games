@@ -1,0 +1,28 @@
+.TopBarDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin: auto;
+}
+
+.Main {
+    background-color: royalblue;
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+}
+
+.MainLink {
+    text-decoration: none;
+    color: white;
+}
+
+.Best {
+    background-color: royalblue;
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+    width: 100px;
+}

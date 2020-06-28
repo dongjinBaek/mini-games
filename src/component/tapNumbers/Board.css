@@ -1,0 +1,37 @@
+.BoardBackground {
+    height: 100%;
+}
+
+.InfoContainer {
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.InfoContainer .Box {
+    background-color: royalblue;
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+    display:flex;
+    justify-content: space-around;
+}
+
+.NewGameBtn {
+    cursor: pointer;
+}
+
+.InfoContainer .Box span {
+    width: 80px;
+}
+
+.Board {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.Board table {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,13 @@
+.App {
+    min-width: 400px;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    background-color: #eee;
+}
+
+.Container {
+    width: 300px;
+    background-color: #ddd;
+}
+

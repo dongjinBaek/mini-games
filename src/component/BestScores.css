@@ -1,0 +1,22 @@
+.BestScores {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+}
+
+.BestScores div {
+    width: 200px;
+    background-color: royalblue;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+}
+
+.BestScores a {
+    text-decoration: none;
+    color: white;
+}

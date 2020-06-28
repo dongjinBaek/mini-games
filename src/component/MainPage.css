@@ -1,0 +1,22 @@
+.MainPage ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 300px;
+    padding-inline-start: 0px;
+}
+
+.MainPage li {
+    list-style: none;
+    text-align: center;
+    width: 200px;
+    background-color: royalblue;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.MainPage a {
+    text-decoration: none;
+    color: white;
+}
