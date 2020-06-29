@@ -8,6 +8,7 @@ const MainPage = () => {
             <ul>
                 <li><Link to='/bestScores'>Best Scores</Link></li>
                 <li><Link to='/game/tapNumbers'>Tap Numbers</Link></li>
+                <li><Link to='/game/slideNumbers'>Slide Numbers</Link></li>
             </ul>
         </div>
     )
