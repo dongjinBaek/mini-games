@@ -4,15 +4,17 @@ class Cell extends Component {
     static defaultProps = {
         number: 0,
         isDraggable: false,
-        onDragStart: () => console.warn('onDragStart not defined')
+        x: 0,
+        y: 0,
+        onCellMouseDown: () => console.warn('onCellMouseDown not defined')
     }
-    handleDragStart = (e) => {
-        const {number, onDragStart} = this.props;
-        onDragStart(e, number);
+    handleCellMouseDown = (e) => {
+        const {number, onCellMouseDown} = this.props;
+        onCellMouseDown(e, number);
     }
 
     render() {
-        const {number, isDraggable} = this.props;
+        const {number, isDraggable, x, y} = this.props;
         const style = {
             width: '50px',
             height: '50px',
@@ -22,10 +24,13 @@ class Cell extends Component {
             display: 'flex',
             alignContent: 'center',
             justifyContent: 'center',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            position: 'absolute',
+            left: x,
+            top: y
         }
         return(
-            <div style={style} onDragStart={this.handleDragStart} draggable={isDraggable ? 'true' : 'false'}>
+            <div style={style} onMouseDown={this.handleCellMouseDown}>
                 <p>{number}</p>
             </div>
         )
