@@ -4,7 +4,7 @@ import './Board.css';
 
 class Board extends Component {
     static defaultProps = {
-        checkHighScore: () => console.warn('checkHighScore not defined')
+        updateHighScore: () => console.warn('updateHighScore not defined')
     }
 
     state = {
@@ -26,7 +26,7 @@ class Board extends Component {
             if (number === 25) {
                 this.stopTimer();
                 alert('finished: your record is ' + timeInMs/1000 + 's');
-                this.props.checkHighScore(timeInMs/1000, 'tapNumbers');
+                this.props.updateHighScore(timeInMs/1000, 'tapNumbers');
             }
         }
     }

@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 class Cell extends Component {
     static defaultProps = {
         number: 0,
-        isDraggable: false,
         x: 0,
         y: 0,
         onCellMouseDown: () => console.warn('onCellMouseDown not defined')
@@ -14,20 +13,21 @@ class Cell extends Component {
     }
 
     render() {
-        const {number, isDraggable, x, y} = this.props;
+        const {number, x, y} = this.props;
         const style = {
             width: '50px',
             height: '50px',
             borderRadius: '3px',
-            background: number === 0 ? 'royalblue': 'skyblue',
-            color: number === 0 ? 'royalblue' : 'black',
+            background: number === 0 ? '#ddd': 'skyblue',
+            color: number === 0 ? '#ddd' : 'black',
+            zIndex: number === 0 ? 0 : 1,
             display: 'flex',
             alignContent: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             position: 'absolute',
             left: x,
-            top: y
+            top: y,
         }
         return(
             <div style={style} onMouseDown={this.handleCellMouseDown}>

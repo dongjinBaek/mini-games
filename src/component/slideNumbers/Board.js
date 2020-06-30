@@ -4,7 +4,7 @@ import './Board.css';
 
 class Board extends Component {
     static defaultProps = {
-        checkHighScore: () => console.warn('checkHighScore not defined')
+        updateHighScore: () => console.warn('updateHighScore not defined')
     }
 
     state = {
@@ -33,6 +33,37 @@ class Board extends Component {
         }
         return {xIdx:-1, yIdx:-1};
     }
+    setDraggableValues(board) {
+        let dx=[1,-1,0,0], dy=[0,0,1,-1];
+        for (let y=0; y<3; y++) {
+            for (let x=0; x<3; x++) {
+                board[y][x].draggableX = 0;
+                board[y][x].draggableY = 0;
+                for (let i=0; i<4; i++) {
+                    let Y=y+dy[i], X=x+dx[i];
+                    if (0 <= X && X < 3 && 0 <= Y && Y < 3) {
+                        if (board[Y][X].number === 0) {
+                            board[y][x].draggableX = dx[i];
+                            board[y][x].draggableY = dy[i];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    checkGameFinished(board) {
+        for (let y=0; y<3; y++) {
+            for (let x=0; x<3; x++) {
+                if (y === 2 && x === 2) {
+                    return true;
+                } else if (board[y][x].number !== 3*y+x+1) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
     onMouseMove = (e) => {
         const {pressX, pressY, pressedNumber, board} = this.state;
         const deltaX = e.pageX - pressX;
@@ -43,8 +74,8 @@ class Board extends Component {
                     row => row.map(
                         cell => cell.number === pressedNumber ? 
                                                     {...cell, 
-                                                        dx: (deltaX * cell.draggableX > 0 ? deltaX : 0),
-                                                        dy: (deltaY * cell.draggableY > 0 ? deltaY : 0)
+                                                        dx: (deltaX * cell.draggableX > 0 ? (Math.abs(deltaX) > 54 ? 54 * cell.draggableX : deltaX) : 0),
+                                                        dy: (deltaY * cell.draggableY > 0 ? (Math.abs(deltaY) > 54 ? 54 * cell.draggableY : deltaY) : 0)
                                                     } : cell
                     )
                 )
@@ -52,7 +83,7 @@ class Board extends Component {
         }
     }
     onMouseUp = (e) => {
-        const {pressX, pressY, pressedNumber, board} = this.state;
+        const {timeInMs, pressX, pressY, pressedNumber, board} = this.state;
         const deltaX = e.pageX - pressX;
         const deltaY = e.pageY - pressY;
         if (pressedNumber === undefined) {
@@ -64,10 +95,10 @@ class Board extends Component {
         } else {
             let pressedCellIdx = this.findIndex(pressedNumber, board);
             let pressedCell = board[pressedCellIdx.yIdx][pressedCellIdx.xIdx];
-
             let zeroCellIdx = this.findIndex(0, board);
             let zeroCell = board[zeroCellIdx.yIdx][zeroCellIdx.xIdx];
-            if (deltaX * pressedCell.draggableX > 30 || deltaY * pressedCell.draggableY > 30) {
+
+            if (deltaX * pressedCell.draggableX + deltaY * pressedCell.draggableY > 30) {
                 let newBoard = board.map(
                     row => row.map(
                         cell => cell === zeroCell ? {...cell, number: pressedNumber} :
@@ -75,26 +106,11 @@ class Board extends Component {
                                 cell
                     )
                 );
-                let dx=[1,-1,0,0], dy=[0,0,1,-1];
-                for (let y=0; y<3; y++) {
-                    for (let x=0; x<3; x++) {
-                        let nextToZero = false;
-                        for (let i=0; i<4; i++) {
-                            let Y=y+dy[i];
-                            let X=x+dx[i];
-                            if (0 <= X && X < 3 && 0 <= Y && Y < 3) {
-                                if (newBoard[Y][X].number === 0) {
-                                    nextToZero = true;
-                                    newBoard[y][x].draggableX = dx[i];
-                                    newBoard[y][x].draggableY = dy[i];
-                                }
-                            }
-                        }
-                        if (!nextToZero) {
-                            newBoard[y][x].draggableX = 0;
-                            newBoard[y][x].draggableY = 0;
-                        }
-                    }
+                this.setDraggableValues(newBoard);
+                if(this.checkGameFinished(newBoard)) {
+                    this.stopTimer();
+                    alert('finished: your record is ' + timeInMs/1000 + 's');
+                    this.props.updateHighScore(timeInMs/1000, 'slideNumbers');
                 }
                 this.setState({
                     pressX: undefined,
@@ -128,30 +144,30 @@ class Board extends Component {
         clearInterval(this.interval);
     }
     resetNumbers = () => {
-        let arr = [];
-        for (let i=0; i<9; i++) {
-            arr.push([Math.random(), i]);
-        }
-        arr.sort();
-        let boardArr = [];
+        let newBoard = [];
         for (let y=0; y<3; y++) {
-            let boardArrRow = [];
+            let newBoardRow = []
             for (let x=0; x<3; x++) {
-                boardArrRow.push({number: arr[3*y+x][1], draggableX: 0, draggableY: 0, x0:(x-1)*50-25, y0:y*50, dx: 0, dy: 0});
+                newBoardRow.push({number: x === 2 && y === 2 ? 0 : 3*y+x+1, draggableX: 0, draggableY: 0, x0: (x-1)*50-25, y0: y*50, dx: 0, dy: 0});
             }
-            boardArr.push(boardArrRow);
+            newBoard.push(newBoardRow);
         }
-        let {xIdx, yIdx} = this.findIndex(0, boardArr);
+        let xIdx=2, yIdx=2;
         let dx = [1, -1, 0, 0], dy = [0, 0, 1, -1];
-        for (let i = 0; i < 4; i++) {
-            let x = xIdx + dx[i];
-            let y = yIdx + dy[i];
+        for (let i = 0; i < 1000; i++) {
+            let idx = Math.floor(Math.random() * 4);
+            let x = xIdx + dx[idx];
+            let y = yIdx + dy[idx];
             if (0 <= x && x < 3 && 0 <= y && y < 3) {
-                boardArr[y][x].draggableX = -dx[i];
-                boardArr[y][x].draggableY = -dy[i];
+                newBoard[yIdx][xIdx].number = newBoard[y][x].number;
+                newBoard[y][x].number = 0;
+                xIdx = x;
+                yIdx = y;
             }
         }
-        this.setState({board: boardArr});
+        
+        this.setDraggableValues(newBoard);
+        this.setState({board: newBoard});
     }
 
     startNewGame = () => {
@@ -163,6 +179,8 @@ class Board extends Component {
     componentDidMount() {
         this.resetNumbers();
         this.startTimer();
+        document.body.addEventListener('mousemove', this.onMouseMove);
+        document.body.addEventListener('mouseup', this.onMouseUp);
     }
 
     componentWillUnmount() {
@@ -187,7 +205,7 @@ class Board extends Component {
             rows.push(<tr key={'tr-'+y}>{cells}</tr>)
         }
         return(
-            <div className='BoardBackground' onMouseMove={this.onMouseMove} onMouseUp={this.onMouseUp}>
+            <div className='BoardBackground'>
                 <div className='InfoContainer'>
                     <span className='Box NewGameBtn' onClick={this.startNewGame}>New Game</span>
                     <span className='Box'>

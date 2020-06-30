@@ -22,7 +22,7 @@ class App extends Component {
             }
         ]
     }
-    checkHighScore = (score, name) => {
+    updateHighScore = (score, name) => {
         const {bestScores} = this.state;
         const game = bestScores.filter((game) => game.name === name);
         if (game.length !== 1) {
@@ -52,8 +52,8 @@ class App extends Component {
                         <Route exact path='/' component={MainPage}/>
                         <Route exact path='/bestScores' render={()=><BestScores bestScores={bestScores}/>}/>
                         <Route path='/game/:name' render={(props) => <TopBar {...props} bestScores={bestScores}/>}/>
-                        <Route path='/game/tapNumbers' render={()=><TapNumbersBoard checkHighScore={this.checkHighScore}/>}/>
-                        <Route path='/game/slideNumbers' render={()=><SlideNumbersBoard checkHighScore={this.checkHighScore}/>}/>
+                        <Route path='/game/tapNumbers' render={()=><TapNumbersBoard updateHighScore={this.updateHighScore}/>}/>
+                        <Route path='/game/slideNumbers' render={()=><SlideNumbersBoard updateHighScore={this.updateHighScore}/>}/>
                     </BrowserRouter>
                 </div>
             </div>

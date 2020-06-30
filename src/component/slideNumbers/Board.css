@@ -1,3 +1,42 @@
 .BoardTd {
     position: relative
 }
+
+.BoardBackground {
+    height: 100%;
+    user-select: none;
+}
+
+.InfoContainer {
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.InfoContainer .Box {
+    background-color: royalblue;
+    color: white;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 3px;
+    display:flex;
+    justify-content: space-around;
+}
+
+.NewGameBtn {
+    cursor: pointer;
+}
+
+.InfoContainer .Box span {
+    width: 90px;
+}
+
+.Board {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.Board table {
+    margin-bottom: 10px;
+}
